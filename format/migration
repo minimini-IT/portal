@@ -1,0 +1,7 @@
+migrationファイルの書き方
+
+addColumn
+removeColumn
+addForeignKey
+dropForeignKey
+addIndex

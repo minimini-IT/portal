@@ -1,0 +1,43 @@
+<?php
+namespace App\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\ComponentRegistry;
+use Cake\Chronos\Chronos;
+
+/**
+ * Carendar component
+ * 指定した月の日付をリストで返すデフフォルトは当月
+ * @param int $addMonth　当月から見て、何ヶ月前（後）かを数字で渡す
+ * @return array $daysOfMonth 対象となる月の日付のリスト(Chronosオブジェクトのリスト)を返す
+ * 　　　　　　　　　　　     デフォルトは当月のリストを返す
+ */
+class CarendarComponent extends Component
+{
+    /**
+     * Default configuration.
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [];
+
+    public function getDaysOfMonth(int $addMonth = 0){
+      $daysOfMonth = [];
+      //Chronos:now()：現在時刻のオブジェクト作成
+      $time = Chronos::now()->startOfMonth();
+      if($addMonth !== 0){
+        $time = $time->addMonths($addMonth);
+      }
+      //startOfMonth()->day：月初日に設定
+      $start = $time->startOfMonth()->day;
+      //endOfMonth()->day：月末に設定
+      $end = $time->endOfMonth()->day;
+
+      for($i = $start; $start <= $end; $start++){
+        $daysOfMonth[] = $time;
+        //addDay()：次の日
+        $time = $time->addDay();
+      }
+      return $daysOfMonth;
+    }
+}
