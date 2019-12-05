@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 
+//$this->log(, LOG_DEBUG);
+
 /**
  * Reservations Controller
  *
@@ -48,20 +50,39 @@ class ReservationsController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($reservation_datetime = null)
     {
         $reservation = $this->Reservations->newEntity();
+        //post->reservationsとreservationDatetime両方saveする
         if ($this->request->is('post')) {
-            $reservation = $this->Reservations->patchEntity($reservation, $this->request->getData());
-            if ($this->Reservations->save($reservation)) {
-                $this->Flash->success(__('The reservation has been saved.'));
+            $this->loadModels(["ReservationDatetimes"]);
+            $data = $this->request->getData();
 
-                return $this->redirect(['action' => 'index']);
+            //menuいらない
+            unset($data["menu"]);
+
+            //patchEntity用に整形
+            $datetime_entity = ["reservation_datetime" => $data["reservation_datetime"]];
+            unset($data["reservation_datetime"]);
+
+            $reservationDatetime = $this->ReservationDatetimes->newEntity();
+            $reservationDatetime = $this->ReservationDatetimes->patchEntity($reservationDatetime, $datetime_entity);
+            $reservation = $this->Reservations->patchEntity($reservation, $data);
+
+            //reservationsはreservation_datetime_idが必要なので先にreservationDatetimeをsave
+            if ($this->ReservationDatetime->save($reservationDatetime)) {
+              if ($this->Reservations->save($reservation)) {
+                  $this->Flash->success(__('The reservation has been saved.'));
+                  return $this->redirect(['action' => 'index']);
+              }
             }
             $this->Flash->error(__('The reservation could not be saved. Please, try again.'));
         }
+
+        // \DateTime \入れないとエラー出る
+        $reservation_datetime = new \DateTime($reservation_datetime);
         $menus = $this->Reservations->Menus->find('list', ['limit' => 200]);
-        $this->set(compact('reservation', 'menus'));
+        $this->set(compact('reservation', 'menus', "reservation_datetime"));
     }
 
     /**
@@ -107,5 +128,18 @@ class ReservationsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    //予約情報の確認
+    public function confirmation(){
+        if ($this->request->is('post')) {
+            $reservation_confirmation = $this->request->getData();
+            //$reservation_confirmation["menus_id"] = $this->Reservations->Menus->find('list', ['limit' => 1])
+            $reservation_confirmation["menu"] = $this->Reservations->Menus->find('list', ['limit' => 1])
+              ->select(["menu"])
+              ->where(["menus_id" => $reservation_confirmation["menus_id"]])
+              ->first();
+            $this->set(compact('reservation_confirmation'));
+        }
     }
 }

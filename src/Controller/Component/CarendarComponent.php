@@ -78,7 +78,7 @@ class CarendarComponent extends Component
       //前の週
       $subWeek = $addWeek;
       if($subWeek === 1){
-        array_unshift($dayWeek[0], "<a href='/Testers'><<前の週 </a>");
+        array_unshift($dayWeek[0], "<a href='/ReservationDatetimes'><<前の週 </a>");
       }elseif($subWeek > 0){
         $subWeek -= 1;
         array_unshift($dayWeek[0], "<a href='{$subWeek}'><<前の週 </a>");
@@ -89,17 +89,16 @@ class CarendarComponent extends Component
       //次の週
       $addWeek += 1;
       if($addWeek == 1){
-        //$dayWeek[0] = $next_week[0];
-        array_push($dayWeek[0], "<a href='Testers/{$addWeek}'> 次の週>></a>");
+        array_push($dayWeek[0], "<a href='/ReservationDatetimes/{$addWeek}'> 次の週>></a>");
       }elseif($addWeek >= 9){
-        //$dayWeek[] = $next_week[1];
         array_push($dayWeek[0], "<p> 次の週>></p>");
       }else{
         array_push($dayWeek[0], "<a href='{$addWeek}'> 次の週>></a>");
-        //$dayWeek[] = $next_week[2];
       }
 
       //format"j"で０なし
       return $dayWeek;
     }
+
+
 }
