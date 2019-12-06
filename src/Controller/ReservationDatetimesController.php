@@ -23,9 +23,19 @@ class ReservationDatetimesController extends AppController
 
       //検索する日付
       $year = date("Y");
-      $length = strpos($link_params[0][1], "</br>");
-      $start_day = $year . "/" . substr($link_params[0][1], 0, $length);
-      $end_day = $year . "/" . substr($link_params[0][7], 0, $length);
+      $start_day_length = strpos($link_params[0][1], "</br>");
+      $end_day_length = strpos($link_params[0][7], "</br>");
+      $start_day = $year . "/" . substr($link_params[0][1], 0, $start_day_length);
+      $end_day = $year . "/" . substr($link_params[0][7], 0, $end_day_length);
+
+      /*
+      $this->log("ReservationDatetimesController index end_day", LOG_DEBUG);
+      $this->log($end_day, LOG_DEBUG);
+      $this->log("ReservationDatetimesController index link_params[0][7]", LOG_DEBUG);
+      $this->log($link_params[0][7], LOG_DEBUG);
+      $this->log("ReservationDatetimesController index length", LOG_DEBUG);
+      $this->log($length, LOG_DEBUG);
+       */
 
       //予約時間検索
       $this->loadModels(["ReservationDatetimes"]);
@@ -59,6 +69,35 @@ class ReservationDatetimesController extends AppController
                "1530","1600","1630","1700","1730","1800","1830","1900","1930","2000","2030"];
 
       $this->set(compact('daysWeek', "time", "check", "week", "link_params", "link_time", "reserved"));
+  }
+
+  public function add(){
+      $reservationDatetime = $this->ReservationDatetimes->newEntity();
+      if ($this->request->is('post')) {
+          //$data = $this->request->getData($datetime);
+          $session = $this->request->session();
+          $data = $session->read("Reservation.datetime");
+          $entity_data = ["reservation_datetime" => $data->format("Y-m-d H:i")];
+          $query_data = $data->format("Y-m-d H:i");
+
+          $reservationDatetime = $this->ReservationDatetimes->patchEntity($reservationDatetime, $entity_data);
+          if ($this->ReservationDatetimes->save($reservationDatetime)) {
+              //予約した時間のid確認
+              $reservation_datetimes_id = $this->ReservationDatetimes->find('list', ['limit' => 1])
+                ->select(["reservation_datetimes_id"])
+                ->where(["reservation_datetime" => $query_data])
+                ->first();
+
+              $this->Flash->success(__('The menu has been saved.'));
+
+              //return $this->redirect(["controller" => "Reservations", 'action' => 'reservation'], ["data" => $reservation_datetimes_id]);
+              return $this->redirect(["controller" => "Reservations", 'action' => 'reservation', $reservation_datetimes_id]);
+          }
+          $session->destroy();
+          $this->Flash->error(__('The menu could not be saved. Please, try again.'));
+          return $this->redirect(['action' => 'index']);
+      }
+
   }
   
 }

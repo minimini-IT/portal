@@ -14,9 +14,9 @@
 </nav>
 <div class="reservations form large-9 medium-8 columns content">
 <p>予約日時</p>
-<p><?= $reservation_datetime->format("Y年m月d日 H時i分") ?></p>
-<?= $this->Form->create(null, [
-      "controller" => "Reservations",
+<p><?= $datetime->format("Y年m月d日 H時i分") ?></p>
+<?= $this->Form->create($reservation, [
+      //"controller" => "Reservations",
       "action" => "confirmation"
     ]) ?>
     <fieldset>
@@ -26,7 +26,7 @@
             echo $this->Form->control('menus_id', ['options' => $menus]);
             echo $this->Form->control('tel');
             echo $this->Form->control('mail');
-            echo $this->Form->control('reservation_datetime', ["type" => "hidden", "value" => $reservation_datetime->format("Y/m/d H:i")]);
+            //echo $this->Form->control('reservation_datetime', ["type" => "hidden", "value" => $reservation_datetime->format("Y/m/d H:i")]);
             //echo $this->Form->control('reservation_datetimes_id', ["type" => "hidden"]);
         ?>
     </fieldset>
