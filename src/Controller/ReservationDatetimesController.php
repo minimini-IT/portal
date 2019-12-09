@@ -28,17 +28,8 @@ class ReservationDatetimesController extends AppController
       $start_day = $year . "/" . substr($link_params[0][1], 0, $start_day_length);
       $end_day = $year . "/" . substr($link_params[0][7], 0, $end_day_length);
 
-      /*
-      $this->log("ReservationDatetimesController index end_day", LOG_DEBUG);
-      $this->log($end_day, LOG_DEBUG);
-      $this->log("ReservationDatetimesController index link_params[0][7]", LOG_DEBUG);
-      $this->log($link_params[0][7], LOG_DEBUG);
-      $this->log("ReservationDatetimesController index length", LOG_DEBUG);
-      $this->log($length, LOG_DEBUG);
-       */
-
       //予約時間検索
-      $this->loadModels(["ReservationDatetimes"]);
+      $this->loadModels(["ReservationDatetimes", "Menus"]);
       $reservationDatetimes = TableRegistry::getTableLocator()->get("ReservationDatetimes");
       $reservationDatetimes = $reservationDatetimes->find()
         ->select(["reservation_datetime"])
@@ -68,13 +59,22 @@ class ReservationDatetimesController extends AppController
       $link_time = ["1000","1030","1100","1130","1200","1230","1300","1330","1400","1430","1500",
                "1530","1600","1630","1700","1730","1800","1830","1900","1930","2000","2030"];
 
+      $menu_time = TableRegistry::getTableLocator()->get("Menus");
+      $menu_time = $menu_time->find()
+        ->select(["menus_id", "menu_time"])
+        ->where([
+          "reservation_datetime between :start and :end"
+        ])
+        ->bind(":start", $start_day, "datetime")
+        ->bind(":end", $end_day, "datetime")
+        ->all();
+
       $this->set(compact('daysWeek', "time", "check", "week", "link_params", "link_time", "reserved"));
   }
 
   public function add(){
       $reservationDatetime = $this->ReservationDatetimes->newEntity();
       if ($this->request->is('post')) {
-          //$data = $this->request->getData($datetime);
           $session = $this->request->session();
           $data = $session->read("Reservation.datetime");
           $entity_data = ["reservation_datetime" => $data->format("Y-m-d H:i")];
@@ -90,7 +90,6 @@ class ReservationDatetimesController extends AppController
 
               $this->Flash->success(__('The menu has been saved.'));
 
-              //return $this->redirect(["controller" => "Reservations", 'action' => 'reservation'], ["data" => $reservation_datetimes_id]);
               return $this->redirect(["controller" => "Reservations", 'action' => 'reservation', $reservation_datetimes_id]);
           }
           $session->destroy();

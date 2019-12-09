@@ -151,8 +151,6 @@ class ReservationsController extends AppController
     public function confirmation(){
         if ($this->request->is('post')) {
             $reservation_confirmation = $this->request->getData();
-            //$reservation_confirmation["menus_id"] = $this->Reservations->Menus->find('list', ['limit' => 1])
-            //$reservation_confirmation["menu"] = $this->Reservations->Menus->find('list', ['limit' => 1])
             $reservation_menu = $this->Reservations->Menus->find('list', ['limit' => 1])
               ->select(["menu"])
               ->where(["menus_id" => $reservation_confirmation["menus_id"]])

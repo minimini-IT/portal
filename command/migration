@@ -3,6 +3,9 @@ bin/cake bake migration Create[テーブル名] [カラム名]:[属性] created 
 ex)
 bin/cake bake migration CreateProducts name:string description:text created modified
 
+空のマイグレーションファイル作成
+bin/cake migrations create ChangeMigration[任意]
+
 マイグレーション実行
 bin/cake migrations migrate
 
