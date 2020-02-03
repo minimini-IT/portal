@@ -33,7 +33,6 @@ class MenusTable extends Table
         parent::initialize($config);
 
         $this->setTable('menus');
-        //$this->setDisplayField('menus_id');
         $this->setDisplayField('menu');
         $this->setPrimaryKey('menus_id');
 
@@ -57,6 +56,11 @@ class MenusTable extends Table
             ->maxLength('menu', 255)
             ->requirePresence('menu', 'create')
             ->notEmptyString('menu');
+
+        $validator
+            ->integer('menu_time')
+            ->requirePresence('menu_time', 'create')
+            ->notEmptyString('menu_time');
 
         return $validator;
     }

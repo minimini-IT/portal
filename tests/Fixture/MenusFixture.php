@@ -25,6 +25,10 @@ class MenusFixture extends TestFixture
         'menu' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'menu_time' => ['type' => 'integer', 'length' => 4, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        '_indexes' => [
+            'menus_id' => ['type' => 'index', 'columns' => ['menus_id'], 'length' => []],
+        ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['menus_id'], 'length' => []],
         ],
@@ -45,8 +49,9 @@ class MenusFixture extends TestFixture
             [
                 'menus_id' => 1,
                 'menu' => 'Lorem ipsum dolor sit amet',
-                'created' => '2019-10-31 12:30:25',
-                'modified' => '2019-10-31 12:30:25'
+                'created' => '2019-12-17 15:11:54',
+                'modified' => '2019-12-17 15:11:54',
+                'menu_time' => 1
             ],
         ];
         parent::init();

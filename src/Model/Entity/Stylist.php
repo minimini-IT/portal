@@ -4,15 +4,20 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Menu Entity
+ * Stylist Entity
  *
- * @property int $menus_id
- * @property string $menu
+ * @property int $stylists_id
+ * @property int $salon_informations_id
+ * @property string $name
+ * @property \Cake\I18n\FrozenDate $start_stylist
+ * @property \Cake\I18n\FrozenDate $birthday
+ * @property string $comment
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
- * @property int $menu_time
+ *
+ * @property \App\Model\Entity\SalonInformation $salon_information
  */
-class Menu extends Entity
+class Stylist extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -24,9 +29,13 @@ class Menu extends Entity
      * @var array
      */
     protected $_accessible = [
-        'menu' => true,
+        'salon_informations_id' => true,
+        'name' => true,
+        'start_stylist' => true,
+        'birthday' => true,
+        'comment' => true,
         'created' => true,
         'modified' => true,
-        'menu_time' => true
+        'salon_information' => true
     ];
 }

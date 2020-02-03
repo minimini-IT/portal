@@ -18,10 +18,24 @@ class ChangeMenus extends AbstractMigration
           'limit' => 4,
           'null' => false,
       ]);
+
+      /*
+      $table->addIndex([
+            'menus_id',
+        ]);
+       */
+
       $table->update();
     }
 
     public function down(){
+      /*
+      $this->table('menus')
+        ->dropIndex(
+          'menus_id'
+        )->save();
+       */
+
       $this->table('menus')->removeColumn("menu_time")->save();
     }
 }

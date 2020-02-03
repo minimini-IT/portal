@@ -19,6 +19,7 @@
                 <th scope="col"><?= $this->Paginator->sort('menu') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('menu_time') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -29,6 +30,7 @@
                 <td><?= h($menu->menu) ?></td>
                 <td><?= h($menu->created) ?></td>
                 <td><?= h($menu->modified) ?></td>
+                <td><?= $this->Number->format($menu->menu_time) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $menu->menus_id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $menu->menus_id]) ?>

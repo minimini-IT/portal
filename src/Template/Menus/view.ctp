@@ -14,7 +14,7 @@
     </ul>
 </nav>
 <div class="menus view large-9 medium-8 columns content">
-    <h3><?= h($menu->menus_id) ?></h3>
+    <h3><?= h($menu->menu) ?></h3>
     <table class="vertical-table">
         <tr>
             <th scope="row"><?= __('Menu') ?></th>
@@ -23,6 +23,10 @@
         <tr>
             <th scope="row"><?= __('Menus Id') ?></th>
             <td><?= $this->Number->format($menu->menus_id) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Menu Time') ?></th>
+            <td><?= $this->Number->format($menu->menu_time) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Created') ?></th>

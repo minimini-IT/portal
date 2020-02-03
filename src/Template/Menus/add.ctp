@@ -16,6 +16,7 @@
         <legend><?= __('Add Menu') ?></legend>
         <?php
             echo $this->Form->control('menu');
+            echo $this->Form->control('menu_time');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

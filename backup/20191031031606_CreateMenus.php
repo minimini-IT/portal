@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateReservations extends AbstractMigration
+class CreateMenus extends AbstractMigration
 {
     /**
      * Change Method.
@@ -12,35 +12,26 @@ class CreateReservations extends AbstractMigration
      */
     public function up()
     {
-        $table = $this->table('reservations', ["id" => false, "primary_key" => ["reservations_id"]]);
-        $table->addColumn('reservations_id', 'integer', [
+        $table = $this->table('menus', ["id" => false, "primary_key" => ["menus_id"]]);
+        $table->addColumn('menus_id', 'integer', [
             'autoIncrement' => true,
             'default' => null,
-            'limit' => 4,
+            'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('name', 'string', [
+        $table->addColumn('salon_informations_id', 'integer', [
+            'default' => null,
+            'limit' => 11,
+            'null' => false,
+        ]);
+        $table->addColumn('menu', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
         ]);
-        $table->addColumn('datetime', 'datetime', [
+        $table->addColumn('time', 'integer', [
             'default' => null,
-            'null' => false,
-        ]);
-        $table->addColumn('menus_id', 'integer', [
-            'default' => null,
-            'limit' => 4,
-            'null' => false,
-        ]);
-        $table->addColumn('tel', 'string', [
-            'default' => null,
-            'limit' => 255,
-            'null' => false,
-        ]);
-        $table->addColumn('mail', 'string', [
-            'default' => null,
-            'limit' => 255,
+            'limit' => 11,
             'null' => false,
         ]);
         $table->addColumn('created', 'datetime', [
@@ -53,26 +44,23 @@ class CreateReservations extends AbstractMigration
         ]);
         $table->create();
 
-        $this->table('reservations')
-            ->addForeignKey(
-                'menus_id',
-                'menus',
-                'menus_id',
+        $table->addForeignKey(
+                'salon_informations_id',
+                'salon_informations',
+                'salon_informations_id',
                 [
-                    'update' => 'RESTRICT',
-                    'delete' => 'RESTRICT'
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
                 ]
             )
             ->update();
     }
 
     public function down(){
-      $this->table('reservations')
+      $this->table('menus')
         ->dropForeignKey(
-          'menus_id'
+          'salon_informations_id'
         )->save();
-
-      $this->table('reservations')->drop()->save();
+      $this->table('menus')->drop()->save();
     }
-
 }

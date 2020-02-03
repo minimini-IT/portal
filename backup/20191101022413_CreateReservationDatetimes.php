@@ -12,9 +12,14 @@ class CreateReservationDatetimes extends AbstractMigration
      */
     public function up()
     {
-        $table = $this->table('reservation_datetimes', ["id" => false, "primary_key" =>["reservation_datetimes_id"]]);
+        $table = $this->table('reservation_datetimes', ["id" => false, "primary_key" => ["reservation_datetimes_id"]]);
         $table->addColumn('reservation_datetimes_id', 'integer', [
             'autoIncrement' => true,
+            'default' => null,
+            'limit' => 11,
+            'null' => false,
+        ]);
+        $table->addColumn('reservations_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
@@ -33,37 +38,24 @@ class CreateReservationDatetimes extends AbstractMigration
         ]);
         $table->create();
 
-        $table = $this->table('reservations');
-        $table->removeColumn("datetime");
-        
-        $table->addColumn('reservation_datetimes_id', 'integer', [
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-          ]);
-        $table->addIndex([
-              'reservation_datetimes_id',
-          ]);
         $table->addForeignKey(
-              'reservation_datetimes_id',
-              'reservation_datetimes',
-              'reservation_datetimes_id',
+              'reservations_id',
+              'reservations',
+              'reservations_id',
               [
-                  'update' => 'RESTRICT',
-                  'delete' => 'RESTRICT'
+                  'update' => 'CASCADE',
+                  'delete' => 'CASCADE'
               ]
           );
         $table->update();
     }
 
     public function down(){
+        $this->table('reservation_datetimes')
+          ->dropForeignKey(
+            'reservations_id'
+          )->save();
+
         $this->table('reservation_datetimes')->drop()->save();
-        $this->table('reservation')
-            ->dropForeignKey(
-                'reservations_datetimes_id'
-            )
-            ->removeColumn("reservation_datetimes_id")
-            ->addColumn("datetime")
-            ->save();
     }
 }
